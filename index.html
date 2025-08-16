@@ -1,355 +1,112 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Retail Sales Analytics • Vishal Kumar</title>
-  <meta name="description" content="Retail Sales Analytics with SQL — dashboards, queries, and insights by Vishal Kumar." />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8">
+  <title>HR Excel Dashboard Project - Vishal Kumar</title>
   <style>
-    :root{
-      --bg-1: #071029;   /* deep navy */
-      --bg-2: #071f2f;   /* tealish */
-      --card: rgba(255,255,255,0.04);
-      --glass: rgba(255,255,255,0.03);
-      --muted: #9db2cc;
-      --accent: #6ee7b7;
-      --accent-2: #60a5fa;
-      --max-width: 1200px;
-      --radius: 14px;
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #fff;
+      background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #1c1c1c);
+      background-size: 400% 400%;
+      animation: gradientBG 20s ease infinite;
+      text-align: center;
     }
 
-    /* Basic reset */
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: "Plus Jakarta Sans", Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      color: #ecf8ff;
-      background: radial-gradient(1200px 600px at 10% 10%, rgba(12,36,64,.35), transparent 20%),
-                  linear-gradient(180deg,var(--bg-1) 0%, var(--bg-2) 100%);
-      overflow-x:hidden;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
-    /* Container */
-    .wrap{
-      max-width: var(--max-width);
-      margin: 48px auto;
-      padding: 36px;
+    h1 {
+      font-size: 2.5rem;
+      margin: 20px;
+      animation: glow 3s ease-in-out infinite alternate;
     }
 
-    /* Hero */
-    header.hero{
-      display:flex;
-      gap:28px;
-      align-items:center;
-      justify-content:space-between;
-      padding:28px;
-      border-radius:calc(var(--radius));
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border: 1px solid rgba(255,255,255,0.04);
-      box-shadow: 0 10px 30px rgba(2,8,23,0.5);
-      position:relative;
-      overflow:visible;
-    }
-    .hero-left{
-      flex:1 1 60%;
-    }
-    .title{
-      font-size: clamp(22px, 4.6vw, 36px);
-      line-height:1.02;
-      margin:0 0 8px;
-      font-weight:800;
-      letter-spacing: -0.02em;
-    }
-    .subtitle{
-      margin:0;
-      color:var(--muted);
-      font-weight:600;
-    }
-    .hero-ctas{
-      display:flex;
-      gap:12px;
-      margin-top:14px;
-    }
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 14px;
-      border-radius:999px;
-      background:transparent;
-      border:1px solid rgba(255,255,255,0.06);
-      color:inherit;
-      text-decoration:none;
-      font-weight:700;
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
-      backdrop-filter: blur(4px);
-    }
-    .btn.primary{
-      background: linear-gradient(90deg, rgba(102,126,234,0.18), rgba(96,165,250,0.12));
-      box-shadow: 0 8px 30px rgba(96,165,250,0.07);
-      border:1px solid rgba(96,165,250,0.18);
-    }
-    .btn:hover{ transform: translateY(-3px) }
-    .meta {
-      display:flex;
-      gap:12px;
-      margin-top:12px;
-      color:var(--muted);
-      font-size:14px;
-      align-items:center;
-    }
-    .badge{
-      background: rgba(255,255,255,0.03);
-      padding:6px 10px;
-      border-radius:999px;
-      font-weight:700;
-      color:var(--muted);
-      border:1px solid rgba(255,255,255,0.02);
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #ff0099, 0 0 20px #ff0099, 0 0 30px #ff0099; }
+      to { text-shadow: 0 0 20px #00ccff, 0 0 30px #00ccff, 0 0 40px #00ccff; }
     }
 
-    /* right column preview */
-    .hero-right{
-      flex: 0 0 320px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      position:relative;
-    }
-    .preview-card{
-      width:320px;
-      height:200px;
-      border-radius:12px;
-      overflow:hidden;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.04);
-      box-shadow: 0 18px 50px rgba(2,8,23,0.6);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .preview-card img{ width:100%; height:100%; object-fit:cover; display:block; }
-
-    /* Cards grid */
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap:18px;
-      margin-top:22px;
-    }
-    .card{
-      background:var(--glass);
-      border-radius:12px;
-      padding:16px;
-      border:1px solid rgba(255,255,255,0.03);
-      min-height:120px;
-      box-shadow: 0 10px 30px rgba(2,8,23,0.45);
-    }
-    .card h3{ margin:0 0 8px; font-size:16px }
-    .card p{ margin:0; color:var(--muted); font-size:14px }
-
-    footer{
-      margin-top:28px;
-      text-align:center;
-      color:var(--muted);
-      font-size:14px;
+    h2 {
+      margin-top: 40px;
+      font-size: 1.8rem;
     }
 
-    /* -------------------
-       Animated Background Layer
-       ------------------- */
-    .bg-canvas{
-      position:fixed;
-      inset:0;
-      z-index:-1;
-      pointer-events:none;
-      opacity:0.95;
-      display:block;
+    img {
+      margin: 15px;
+      width: 400px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(255,255,255,0.2);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
     }
 
-    /* Floating soft shapes */
-    .shape {
-      position:absolute;
-      width:420px;
-      height:420px;
-      filter: blur(70px);
-      opacity: .12;
-      border-radius: 40%;
-      transform: translate3d(0,0,0);
-      mix-blend-mode: screen;
-      animation: drift 24s linear infinite;
-    }
-    .shape.s1{ background: linear-gradient(135deg,#60a5fa 0%, #7c3aed 100%); left:-10%; top:-8%; animation-duration:38s }
-    .shape.s2{ background: linear-gradient(135deg,#34d399 0%, #06b6d4 100%); right:-12%; bottom:-6%; animation-duration:46s; }
-    .shape.s3{ background: linear-gradient(135deg,#f472b6 0%, #fb923c 100%); left:40%; bottom:-16%; animation-duration:54s; opacity:.08 }
-
-    @keyframes drift{
-      0%{ transform: translateY(0) rotate(0deg) scale(1) }
-      50%{ transform: translateY(-60px) rotate(14deg) scale(1.06) }
-      100%{ transform: translateY(0) rotate(0deg) scale(1) }
+    img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #00f0ff, 0 0 50px #ff00ff;
     }
 
-    /* Subtle grid lines using SVG (parallax) */
-    .gridlines {
-      position:fixed; inset:0; z-index:-1; pointer-events:none;
-      opacity:0.06;
-    }
-    .wave {
-      position: absolute;
-      left:-8%;
-      right:-8%;
-      height:140px;
-      top:60%;
-      transform: translateZ(0);
-      opacity:0.06;
-      filter: blur(12px);
-      animation: waveMove 28s linear infinite;
-    }
-    @keyframes waveMove{
-      0%{ transform: translateX(0) translateY(0) }
-      50%{ transform: translateX(-6%) translateY(-8px) }
-      100%{ transform: translateX(0) translateY(0) }
+    video {
+      margin-top: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.3);
     }
 
-    /* small dot matrix for a techy feel */
-    .dot-matrix{
-      position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:0.045;
-      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.02) 1px, transparent 2px);
-      background-size: 18px 18px;
-      mix-blend-mode: overlay;
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      text-decoration: none;
+      color: #fff;
+      background: linear-gradient(90deg, #ff0099, #493240);
+      border-radius: 8px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    /* Accessibility: respect reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-      .shape, .wave { animation: none; }
-      .preview-card, .hero { transition: none; }
+    a:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #ff0099, 0 0 30px #00ccff;
     }
 
-    /* Responsive tweaks */
-    @media (max-width:880px){
-      .hero{
-        flex-direction:column;
-        align-items:flex-start;
-      }
-      .hero-right { width:100%; }
-      .preview-card{ width:100%; height:160px }
+    footer {
+      margin-top: 50px;
+      padding: 20px;
+      background: rgba(0,0,0,0.3);
+    }
+
+    footer a {
+      color: #00ccff;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
+  <h1>HR Excel Dashboard Project - Vishal Kumar</h1>
 
-  <!-- Animated background layers -->
-  <div class="bg-canvas" aria-hidden="true">
-    <div class="shape s1" role="presentation"></div>
-    <div class="shape s2" role="presentation"></div>
-    <div class="shape s3" role="presentation"></div>
+  <h2>📊 Dashboard Images</h2>
+  <img src="Dashboard Clean Data HR (4).png" alt="Clean Data Dashboard">
+  <img src="Dashboard HR (1).png" alt="Dashboard 1">
+  <img src="Dashboard HR (2).png" alt="Dashboard 2">
+  <img src="Dashboard PivotTable HR (3).png" alt="Pivot Table Dashboard">
+  <img src="Dashboard Raw Data HR (5).png" alt="Raw Data">
 
-    <!-- svg gridlines -->
-    <svg class="gridlines" width="100%" height="100%" preserveAspectRatio="none" aria-hidden="true">
-      <defs>
-        <pattern id="smallGrid" width="80" height="80" patternUnits="userSpaceOnUse">
-          <path d="M 80 0 L 0 0 0 80" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#smallGrid)"></rect>
-    </svg>
+  <h2>🎥 Dashboard Video</h2>
+  <video width="600" controls>
+    <source src="Hr project dashboard vid.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
 
-    <!-- soft wave -->
-    <svg class="wave" viewBox="0 0 1600 120" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,60 C250,10 450,110 800,70 C1150,30 1400,110 1600,70 L1600 120 L0 120 Z" fill="#0b2a3a"></path>
-    </svg>
+  <h2>📂 Dataset</h2>
+  <p><a href="HR Dataset.xlsx" download>Download Excel Dataset</a></p>
 
-    <div class="dot-matrix"></div>
-  </div>
-
-  <div class="wrap" role="main">
-    <header class="hero" role="banner" aria-label="Project introduction">
-      <div class="hero-left">
-        <h1 class="title">Retail Sales Analytics — PostgreSQL & SQL</h1>
-        <p class="subtitle">End-to-end analytics: data ingestion, time-series revenue, product & category insights. Designed for clarity — ready for portfolio presentation.</p>
-
-        <div class="hero-ctas" aria-hidden="false">
-          <a class="btn primary" href="https://github.com/vishalnfskumar/Retail-Sales-Analytics-with-SQL" target="_blank" rel="noopener noreferrer">Open Repo</a>
-          <a class="btn" href="#files">Files & Images</a>
-          <a class="btn" href="#insights">Insights</a>
-        </div>
-
-        <div class="meta" aria-hidden="true">
-          <span class="badge">PostgreSQL</span>
-          <span class="badge">SQL</span>
-          <span class="badge">ETL & Time-Series</span>
-        </div>
-      </div>
-
-      <div class="hero-right" aria-hidden="true">
-        <div class="preview-card" title="Project preview">
-          <!-- swap source to one of your screenshot images -->
-          <img src="Screenshot%202025-08-13%20183509.png" alt="Preview screenshot (replace with one of your screenshots)">
-        </div>
-      </div>
-    </header>
-
-    <section id="files" class="grid" aria-labelledby="filesHeading" style="margin-top:22px;">
-      <div class="card">
-        <h3 id="filesHeading">📁 Files</h3>
-        <p>Includes SQL script(s), screenshots demonstrating query outputs & charts, and a CSV data source for ingestion. Clean structure helps reviewers run the project quickly.</p>
-      </div>
-
-      <div class="card">
-        <h3>🔍 What I did</h3>
-        <p>Designed table schemas, imported `synthetic_online_retail_data.csv`, used `EXTRACT()` for month/year, computed revenue as <code>SUM(quantity * price)</code>, and produced monthly & category-level insights.</p>
-      </div>
-
-      <div class="card">
-        <h3>🚀 How to run</h3>
-        <p>1. Create DB in PostgreSQL. 2. Use <code>\copy</code> or <code>COPY</code> to import CSV. 3. Run <code>Task 6.sql</code>. 4. Review outputs or export to visualization tool.</p>
-      </div>
-    </section>
-
-    <section id="insights" class="grid" style="margin-top:18px;">
-      <div class="card">
-        <h3>📈 Quick Insights</h3>
-        <p>Summarize top findings here — e.g., peak revenue months, top categories, and seasonal trends. Use this area to show business impact (not just queries).</p>
-      </div>
-
-      <div class="card">
-        <h3>🧭 Next Steps</h3>
-        <p>Consider adding: cleaned CSV in <code>/data</code>, annotated SQL steps, and an exported CSV of result tables for visualization demos (Power BI / Tableau).</p>
-      </div>
-    </section>
-
-    <footer>
-      © <span id="yr"></span> Vishal Kumar — Retail Sales Analytics • <a href="https://www.linkedin.com/in/vishalnfskumar" style="color:inherit;text-decoration:underline;">LinkedIn</a>
-    </footer>
-  </div>
-
-  <script>
-    // footer year
-    document.getElementById('yr').textContent = new Date().getFullYear();
-
-    // Replace preview image if missing with a placeholder color block
-    (function fixPreview(){
-      const img = document.querySelector('.preview-card img');
-      img.addEventListener('error', () => {
-        img.remove();
-        const card = document.querySelector('.preview-card');
-        const placeholder = document.createElement('div');
-        placeholder.style.width = '100%';
-        placeholder.style.height = '100%';
-        placeholder.style.display = 'flex';
-        placeholder.style.alignItems = 'center';
-        placeholder.style.justifyContent = 'center';
-        placeholder.style.background = 'linear-gradient(135deg, rgba(96,165,250,0.12), rgba(102,126,234,0.08))';
-        placeholder.style.color = '#cfe9ff';
-        placeholder.style.fontWeight = 700;
-        placeholder.textContent = 'Screenshot preview';
-        card.appendChild(placeholder);
-      }, {once:true});
-    })();
-  </script>
+  <footer>
+    <p>Created by <strong>Vishal Kumar</strong> | 
+      <a href="https://www.linkedin.com/in/vishalnfskumar" target="_blank">LinkedIn</a>
+    </p>
+  </footer>
 </body>
 </html>
